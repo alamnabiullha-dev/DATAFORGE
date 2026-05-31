@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataForge Registration</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at top, #1a1f3c, #050816 60%);
+            overflow-x: hidden;
+            color: white;
+        }
+
+        /* animated glow background */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.35), transparent 45%),
+                radial-gradient(circle at 80% 30%, rgba(0, 212, 255, 0.25), transparent 45%),
+                radial-gradient(circle at 50% 80%, rgba(255, 0, 150, 0.15), transparent 50%);
+            filter: blur(0px);
+            animation: floatBg 10s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes floatBg {
+            0% {
+                transform: scale(1) translateY(0)
+            }
+
+            100% {
+                transform: scale(1.08) translateY(-10px)
+            }
+        }
+
+        /* floating blobs */
+        .blob {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.25;
+            z-index: 0;
+        }
+
+        .blob1 {
+            background: #7c3aed;
+            top: 10%;
+            left: 10%;
+        }
+
+        .blob2 {
+            background: #00d4ff;
+            bottom: 10%;
+            right: 10%;
+        }
+
+        .blob3 {
+            background: #ff0077;
+            top: 60%;
+            left: 40%;
+        }
+
+        /* container */
+        .container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 25px;
+            z-index: 10;
+        }
+
+        /* card */
+        .card {
+            width: 100%;
+            max-width: 720px;
+            padding: 35px;
+            border-radius: 26px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            animation: popIn 0.6s ease;
+            max-height: 92vh;
+            overflow-y: auto;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1
+            }
+        }
+
+        /* headings */
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        p {
+            text-align: center;
+            color: #b8c1ec;
+            margin-bottom: 25px;
+        }
+
+        /* inputs */
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.07);
+            color: white;
+            outline: none;
+            font-size: 14px;
+            transition: 0.25s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        input:focus {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+
+        /* sections */
+        .leader,
+        .member {
+            padding: 18px;
+            margin-top: 15px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: 0.2s;
+        }
+
+        .leader:hover,
+        .member:hover {
+            transform: translateY(-2px);
+            border-color: rgba(124, 58, 237, 0.3);
+        }
+
+        .leader h3 {
+            margin-bottom: 10px;
+            color: #00d4ff;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        /* buttons */
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        #addMember {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            display: none;
+        }
+
+        #addMember:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .submit {
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            color: white;
+            box-shadow: 0 15px 35px rgba(124, 58, 237, 0.35);
+        }
+
+        /* delete */
+        .deleteBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: none;
+            border-radius: 10px;
+            background: #ff4d6d;
+            color: white;
+
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(255, 77, 109, 0.25);
+        }
+
+        /* hover effect */
+        .deleteBtn:hover {
+            background: #e63956;
+            transform: scale(1.08);
+            box-shadow: 0 6px 14px rgba(255, 77, 109, 0.35);
+        }
+
+        /* active click effect */
+        .deleteBtn:active {
+            transform: scale(0.95);
+        }
+
+        /* keyboard accessibility */
+        .deleteBtn:focus {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+
+        /* banner */
+        .banner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 900;
+            font-size: clamp(3rem, 9vw, 7rem);
+            letter-spacing: clamp(8px, 2vw, 20px);
+            color: rgba(255, 255, 255, 0.04);
+            z-index: 0;
+        }
+
+        /* welcome */
+        #welcome {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* home */
+        #home {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* toast */
+        #toast {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            padding: 12px 18px;
+            border-radius: 12px;
+            display: none;
+        }
+
+        /* mobile */
+        @media (max-width:600px) {
+            .card {
+                border-radius: 0;
+                padding: 22px;
+            }
+
+            .banner {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+
+    <div class="banner">DATAFORGE</div>
+
+    <div class="container">
+        <div class="card" id="formBox">
+
+            <h1>🚀 DataForge</h1>
+            <p>Team Registration from</p>
+
+            <form id="form">
+
+                <input id="team" placeholder="Team Name" required>
+
+                <div class="leader">
+                    <h3>👑 Team Leader</h3>
+                    <input placeholder="Leader Name" required>
+                    <input placeholder="College Name" required>
+                    <input placeholder="Course" required>
+                    <input type="number" placeholder="Phone" required>
+                    <input type="email" placeholder="Email" required>
+                </div>
+
+                <div id="members"></div>
+
+                <button type="button" id="addMember">+ Add Member</button>
+                <button class="submit">Register Team</button>
+
+            </form>
+        </div>
+    </div>
+
+    <div id="welcome">
+        <h1>🎉 SUCCESS</h1>
+        <p>Registration Completed Successfully, please cheack your email for more details! Thank you</p>
+    </div>
+
+    <div id="home">
+        <h1>🏠 HOME</h1>
+        <p id="info"></p>
+    </div>
+
+    <div id="toast"></div>
+
+
+    <script>
+        emailjs.init("pbfeVAbiTy8OHjGfO");
+
+        let count = 0;
+        let isSubmitting = false;
+
+        const members = document.getElementById("members");
+        const addBtn = document.getElementById("addMember");
+
+        function toast(msg) {
+            const t = document.getElementById("toast");
+            t.innerText = msg;
+            t.style.display = "block";
+            setTimeout(() => t.style.display = "none", 2000);
+        }
+
+        // ---------------- ADD MEMBER ----------------
+        function addMember() {
+            if (count >= 3) return toast("Max 3 members allowed");
+
+            count++;
+
+            const div = document.createElement("div");
+            div.className = "member";
+            div.style.position = "relative";
+
+            div.innerHTML = `
+        <div style="color:#7c3aed;font-size:13px;font-weight:600;margin-bottom:8px;">
+            👥 MEMBER ${count}
+        </div>
+
+        <button type="button" class="deleteBtn">×</button>
+
+        <input placeholder="Name" required>
+        <input placeholder="College" required>
+        <input placeholder="Course" required>
+        <input type="number" placeholder="Phone" required>
+        <input type="email" placeholder="Email" required>
+    `;
+
+            members.appendChild(div);
+
+            div.querySelector(".deleteBtn").onclick = () => {
+                div.remove();
+                count--;
+            };
+        }
+
+        // ---------------- LEADER CHECK ----------------
+        function checkLeaderFilled() {
+            const inputs = document.querySelectorAll(".leader input");
+            const ok = [...inputs].every(i => i.value.trim() !== "");
+            addBtn.style.display = ok ? "block" : "none";
+        }
+
+        document.querySelectorAll(".leader input").forEach(i => {
+            i.addEventListener("input", checkLeaderFilled);
+        });
+
+        addBtn.onclick = addMember;
+
+        // ---------------- FORM SUBMIT ----------------
+        document.getElementById("form").onsubmit = (e) => {
+            e.preventDefault();
+
+            if (isSubmitting) return;
+            isSubmitting = true;
+
+            const team = document.getElementById("team").value;
+
+            // ---------------- LEADER ----------------
+            const leaderInputs = document.querySelectorAll(".leader input");
+
+            const leader = {
+                name: leaderInputs[0].value,
+                college: leaderInputs[1].value,
+                course: leaderInputs[2].value,
+                phone: leaderInputs[3].value,
+                email: leaderInputs[4].value
+            };
+
+            // ---------------- MEMBERS ----------------
+            let membersData = [];
+
+            document.querySelectorAll(".member").forEach(m => {
+                const f = m.querySelectorAll("input");
+
+                membersData.push({
+                    name: f[0].value,
+                    college: f[1].value,
+                    course: f[2].value,
+                    phone: f[3].value,
+                    email: f[4].value
+                });
+            });
+
+            console.log("DATA:", { leader, membersData });
+
+            // ---------------- EMAIL VALIDATION ----------------
+            function isValidEmail(email) {
+                return email && email.includes("@");
+            }
+
+            if (!isValidEmail(leader.email)) {
+                toast("Leader email invalid!");
+                isSubmitting = false;
+                return;
+            }
+
+            for (let m of membersData) {
+                if (!isValidEmail(m.email)) {
+                    toast("Member email invalid!");
+                    isSubmitting = false;
+                    return;
+                }
+            }
+
+            // ---------------- FORMAT MESSAGE ----------------
+            let formattedMessage = `
+TEAM REGISTRATION DETAILS
+
+Team Name: ${team}
+
+========================
+👑 LEADER
+Name: ${leader.name}
+College: ${leader.college}
+Course: ${leader.course}
+Phone: ${leader.phone}
+Email: ${leader.email}
+
+========================
+👥 MEMBERS
+`;
+
+            membersData.forEach((m, i) => {
+                formattedMessage += `
+Member ${i + 1}
+Name: ${m.name}
+College: ${m.college}
+Course: ${m.course}
+Phone: ${m.phone}
+Email: ${m.email}
+------------------------
+`;
+            });
+
+            // ---------------- OWNER + ALL EMAILS ----------------
+            const ownerEmail = "alamnabiullha@gmail.com"; // 🔥 OWNER EMAIL
+
+            const allPeople = [
+                leader,
+                ...membersData,
+                { email: ownerEmail, name: "Owner" }
+            ];
+
+            allPeople.forEach(p => {
+
+                if (!p.email || !p.email.includes("@")) return;
+
+                emailjs.send("service_yavffcf", "template_aexk687", {
+                    to_email: p.email,
+                    team: team,
+                    message: formattedMessage
+                })
+                    .then(() => {
+                        console.log("Email sent to:", p.email);
+                    })
+                    .catch(err => {
+                        console.error("EmailJS Error:", err);
+                    });
+
+            });
+
+            // ---------------- UI ----------------
+            document.getElementById("formBox").style.display = "none";
+            document.getElementById("welcome").style.display = "flex";
+
+            setTimeout(() => {
+                document.getElementById("welcome").style.display = "none";
+                document.getElementById("home").style.display = "block";
+
+                document.getElementById("info").innerText =
+                    `Team: ${team}
+Leader: ${leader.name}
+Members: ${membersData.length}`;
+
+                isSubmitting = false;
+            }, 3000);
+        };
+    </script>
+</body>

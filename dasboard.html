@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataForge Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            overflow: hidden;
+            background: #050816;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .bg {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, #7c3aed55, transparent 40%),
+                radial-gradient(circle at 80% 30%, #00d4ff33, transparent 40%),
+                radial-gradient(circle at 50% 80%, #ff007733, transparent 50%);
+            animation: floatBg 6s infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes floatBg {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.15) translateY(-20px);
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #00d4ff;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: move 6s infinite linear;
+        }
+
+        @keyframes move {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateY(-800px);
+                opacity: 0;
+            }
+        }
+
+        .dashboard {
+            position: relative;
+            z-index: 2;
+            width: 92%;
+            max-width: 650px;
+            padding: 30px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            color: #00d4ff;
+            text-shadow: 0 0 20px #00d4ff;
+        }
+
+        .card {
+            margin: 15px 0;
+            padding: 18px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .highlight {
+            border: 1px solid #ff0077;
+        }
+
+        .register-btn {
+            margin-top: 12px;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+        }
+
+        .register-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg"></div>
+
+    <div class="dashboard">
+
+        <h1>⚡ DATAFORGE</h1>
+
+        <div class="card">
+            <h2>📅 Live Calendar</h2>
+            <p id="date"></p>
+            <p id="time"></p>
+        </div>
+
+        <div class="card highlight">
+            <h2>⏳ Registration Deadline</h2>
+            <p style="font-size:20px;color:#ff0077;font-weight:700;">
+                5 SEPTEMBER
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Click to Register Now</h2>
+
+            <button class="register-btn" onclick="goRegister()">
+                🚀 Register Now
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+
+        // CLOCK
+        function updateClock() {
+            const now = new Date();
+            document.getElementById("date").innerText = now.toDateString();
+            document.getElementById("time").innerText = now.toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // PARTICLES
+        function createParticles() {
+            for (let i = 0; i < 25; i++) {
+                let p = document.createElement("div");
+                p.className = "particle";
+                document.body.appendChild(p);
+
+                p.style.left = Math.random() * 100 + "vw";
+                p.style.top = Math.random() * 100 + "vh";
+                p.style.animationDuration = (3 + Math.random() * 5) + "s";
+            }
+        }
+        createParticles();
+
+        // FIXED NAVIGATION
+        function goRegister() {
+            window.location.href = "index.html";
+        }
+
+    </script>
+
+</body>
+
+</html>
